@@ -7,11 +7,11 @@ import { SearchBar } from 'react-native-elements';
 const ImageSearch = () => {
 
     const [images, setImages] = useState([])
-    const [searchText, setSearchText] = useState('')
+    const [searchText, setSearchText] = useState('Cat')
 
 
     const loadImages = async () => {
-        let images = await ImagesController.getImages();
+        let images = await ImagesController.getImages(searchText);
         setImages(images);
     }
 
@@ -23,16 +23,12 @@ const ImageSearch = () => {
         setSearchText(text);
     }
 
-    const renderHeader = () => {
-        return (
-            <Text style={styles.headerText}>Flicker Image results</Text>
-        )
-    }
-
     const renderImage = ({ item }) => {
-        console.log('Itom', item)
+        console.log('Item', item)
         return (
-            <Image style={styles.image} source={{ uri: item.url }} />
+            <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{ uri: item.url }} />
+            </View>
         )
     }
 
@@ -52,9 +48,10 @@ const ImageSearch = () => {
             return (
                 <FlatList
                     contentContainerStyle={styles.listContainer}
-                    ListHeaderComponent={renderHeader()}
                     data={images}
                     renderItem={(item) => renderImage(item)}
+                    numColumns={2}
+                    extraData={images}
                 />
             )
         }
