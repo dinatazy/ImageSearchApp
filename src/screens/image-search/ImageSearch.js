@@ -9,15 +9,30 @@ const ImageSearch = () => {
     const [images, setImages] = useState([])
     const [page, setPage] = useState(1)
     const [searchText, setSearchText] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-
-    const loadImages = async () => {
-        let loadedImages = await ImagesController.getImages(searchText, page);
-        let newImageList = images.concat(loadedImages);
-        setImages(newImageList);
-    }
 
     const loadMoreImages = async () => {
+        if (searchText != '' && searchText.length >= 3) {
+            setIsLoadingMore(true);
+            let loadedImages = await ImagesController.getImages(searchText, page);
+            let newImageList = images.concat(loadedImages);
+            setImages(newImageList);
+            setIsLoadingMore(false);
+        }
+    }
+
+    const loadImages = async () => {
+        if (searchText != '' && searchText.length >= 3) {
+            setIsLoading(true);
+            let loadedImages = await ImagesController.getImages(searchText, page);
+            setImages(loadedImages);
+            setIsLoading(false);
+        }
+    }
+
+    const incrementPage = () => {
         let nextPage = page + 1;
         setPage(nextPage);
     }
@@ -27,28 +42,43 @@ const ImageSearch = () => {
     }, [])
 
     useEffect(() => {
-        setImages([]);
-    }, [searchText])
+        loadMoreImages();
+    }, [page])
 
     useEffect(() => {
         loadImages();
-    }, [searchText, page])
+    }, [searchText])
 
     const updateSearchText = (text) => {
         setSearchText(text);
     }
 
     const renderFooter = () => {
-        return (
-            <ActivityIndicator style={styles.loadMore} size="small" color="black" />
-        )
+        if (isLoadingMore) {
+            return (
+                <ActivityIndicator style={styles.loadMore} size="small" color="black" />
+            )
+        }
+    }
+
+    const renderLoading = () => {
+        if (isLoading) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator
+                        size="large"
+                        color="black"
+                    />
+                </View>
+            )
+        }
     }
 
     const renderImage = ({ item }) => {
         console.log('Item', item)
         return (
             <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri: item.url }} />
+                <Image key={item.id} style={styles.image} source={{ uri: item.url, }} />
             </View>
         )
     }
@@ -71,9 +101,9 @@ const ImageSearch = () => {
                     contentContainerStyle={styles.listContainer}
                     data={images}
                     renderItem={(item) => renderImage(item)}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.url}
                     numColumns={2}
-                    onEndReached={() => loadMoreImages()}
+                    onEndReached={() => incrementPage()}
                     ListFooterComponent={renderFooter()}
                     extraData={images}
                 />
@@ -85,6 +115,7 @@ const ImageSearch = () => {
         <View style={styles.container}>
             {renderSearchBar()}
             {renderImages()}
+            {renderLoading()}
         </View>
     )
 }
