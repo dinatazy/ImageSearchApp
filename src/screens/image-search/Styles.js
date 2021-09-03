@@ -23,6 +23,10 @@ export const styles = StyleSheet.create({
         paddingBottom: 60,
     },
 
+    loadMore:{
+        alignSelf: 'center' 
+    },
+
     imageContainer:{
         marginRight:10,
         marginBottom:10,

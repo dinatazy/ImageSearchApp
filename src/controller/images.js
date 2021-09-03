@@ -4,8 +4,8 @@ import Api from '../api'
 
 class Images {
 
-    getImages = async (searchText) => {
-        let data = await Api.getImages(searchText);
+    getImages = async (searchText, page) => {
+        let data = await Api.getImages(searchText, page);
         if (data && data.photos && data.photos.photo) {
             let images = data.photos.photo;
            let constructedUrlArray = this.constructImageUrl(images);

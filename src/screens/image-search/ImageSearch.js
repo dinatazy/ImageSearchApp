@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, Image } from 'react-native';
+import { View, FlatList, Text, Image, ActivityIndicator } from 'react-native';
 import { styles } from './Styles'
 import { ImagesController } from '../../controller/images'
 import { SearchBar } from 'react-native-elements';
@@ -7,20 +7,41 @@ import { SearchBar } from 'react-native-elements';
 const ImageSearch = () => {
 
     const [images, setImages] = useState([])
-    const [searchText, setSearchText] = useState('Cat')
+    const [page, setPage] = useState(1)
+    const [searchText, setSearchText] = useState('')
 
 
     const loadImages = async () => {
-        let images = await ImagesController.getImages(searchText);
-        setImages(images);
+        let loadedImages = await ImagesController.getImages(searchText, page);
+        let newImageList = images.concat(loadedImages);
+        setImages(newImageList);
+    }
+
+    const loadMoreImages = async () => {
+        let nextPage = page + 1;
+        setPage(nextPage);
     }
 
     useEffect(() => {
         loadImages();
     }, [])
 
+    useEffect(() => {
+        setImages([]);
+    }, [searchText])
+
+    useEffect(() => {
+        loadImages();
+    }, [searchText, page])
+
     const updateSearchText = (text) => {
         setSearchText(text);
+    }
+
+    const renderFooter = () => {
+        return (
+            <ActivityIndicator style={styles.loadMore} size="small" color="black" />
+        )
     }
 
     const renderImage = ({ item }) => {
@@ -50,7 +71,10 @@ const ImageSearch = () => {
                     contentContainerStyle={styles.listContainer}
                     data={images}
                     renderItem={(item) => renderImage(item)}
+                    keyExtractor={(item) => item.id}
                     numColumns={2}
+                    onEndReached={() => loadMoreImages()}
+                    ListFooterComponent={renderFooter()}
                     extraData={images}
                 />
             )
