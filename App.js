@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ImageSearch } from './screens/image-search/ImageSearch'
+import { ImageSearch } from './src/screens/image-search/ImageSearch'
 
 const Stack = createNativeStackNavigator();
 
