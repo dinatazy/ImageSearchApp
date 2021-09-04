@@ -29,6 +29,7 @@ const ImageSearch = () => {
     // load images' urls to display them
     const loadImages = async () => {
         if (searchText != '' && searchText.length >= 3) {
+            setPage(1);
             setIsLoading(true);
             let loadedImages = await ImagesController.getImages(searchText, page);
             setImages(loadedImages);
@@ -46,8 +47,11 @@ const ImageSearch = () => {
 
     // setting the next page number
     const incrementPage = () => {
+        let totalPages = ImagesController.total;
         let nextPage = page + 1;
-        setPage(nextPage);
+        if (!isLoadingMore && nextPage <= totalPages) {
+            setPage(nextPage);
+        }
     }
 
     useEffect(() => {
@@ -56,7 +60,9 @@ const ImageSearch = () => {
     }, [])
 
     useEffect(() => {
-        loadMoreImages();
+        if (page > 1) {
+            loadMoreImages();
+        }
     }, [page])
 
     useEffect(() => {
@@ -68,7 +74,7 @@ const ImageSearch = () => {
     }
 
     const updateSearchHistory = async () => {
-         await HistoryController.updateSearchHistory(searchText);
+        await HistoryController.updateSearchHistory(searchText);
     }
 
     const renderFooter = () => {
