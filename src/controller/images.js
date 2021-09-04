@@ -1,9 +1,9 @@
 
-import image from '../model/image'
 import Api from '../api'
 
 class Images {
 
+    // Gets the Images based on the written search text 
     getImages = async (searchText, page) => {
         let data = await Api.getImages(searchText, page);
         if (data && data.photos && data.photos.photo) {
@@ -15,6 +15,7 @@ class Images {
         }
     }
 
+    // Construct each Image's url 
     constructImageUrl(images) {
         let imageArray = [];
         images.forEach((image => {

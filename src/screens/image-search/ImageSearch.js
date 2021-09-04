@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, Image, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import { styles } from './Styles'
 import { ImagesController } from '../../controller/images'
-import { SearchBar } from 'react-native-elements';
+import { HistoryController } from '../../controller/history'
+import { SearchBar, Image, ListItem, Icon } from 'react-native-elements';
+
 
 const ImageSearch = () => {
 
@@ -11,8 +13,9 @@ const ImageSearch = () => {
     const [searchText, setSearchText] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [historyTexts, setHistoryTexts] = useState([]);
 
-
+    // load more images on reaching the end of the images list
     const loadMoreImages = async () => {
         if (searchText != '' && searchText.length >= 3) {
             setIsLoadingMore(true);
@@ -23,6 +26,7 @@ const ImageSearch = () => {
         }
     }
 
+    // load images' urls to display them
     const loadImages = async () => {
         if (searchText != '' && searchText.length >= 3) {
             setIsLoading(true);
@@ -32,12 +36,22 @@ const ImageSearch = () => {
         }
     }
 
+    // load Search history texts
+    const loadHistory = async () => {
+        let historyTexts = await HistoryController.getSearchHistory();
+        if (historyTexts) {
+            setHistoryTexts(historyTexts)
+        }
+    }
+
+    // setting the next page number
     const incrementPage = () => {
         let nextPage = page + 1;
         setPage(nextPage);
     }
 
     useEffect(() => {
+        loadHistory();
         loadImages();
     }, [])
 
@@ -51,6 +65,10 @@ const ImageSearch = () => {
 
     const updateSearchText = (text) => {
         setSearchText(text);
+    }
+
+    const updateSearchHistory = async () => {
+         await HistoryController.updateSearchHistory(searchText);
     }
 
     const renderFooter = () => {
@@ -75,7 +93,6 @@ const ImageSearch = () => {
     }
 
     const renderImage = ({ item }) => {
-        console.log('Item', item)
         return (
             <View style={styles.imageContainer}>
                 <Image key={item.id} style={styles.image} source={{ uri: item.url, }} />
@@ -86,12 +103,31 @@ const ImageSearch = () => {
     const renderSearchBar = () => {
         return (
             <SearchBar
+                containerStyle={styles.searchContainer}
+                inputContainerStyle={styles.inputContainer}
                 placeholder="Type Here..."
                 onChangeText={(text) => updateSearchText(text)}
+                onEndEditing={() => updateSearchHistory()}
+                autoCorrect={false}
                 value={searchText}
                 lightTheme
             />
         )
+    }
+
+    const renderSearchHistory = () => {
+        if (historyTexts && historyTexts.length > 0) {
+            return (
+                historyTexts.map((item, i) => (
+                    <ListItem containerStyle={{ backgroundColor: 'transparent' }} key={i} bottomDivider>
+                        <Icon name={"history"} />
+                        <ListItem.Content>
+                            <ListItem.Title>{item.title}</ListItem.Title>
+                        </ListItem.Content>
+                    </ListItem>
+                ))
+            )
+        }
     }
 
     const renderImages = () => {
@@ -114,6 +150,7 @@ const ImageSearch = () => {
     return (
         <View style={styles.container}>
             {renderSearchBar()}
+            {renderSearchHistory()}
             {renderImages()}
             {renderLoading()}
         </View>

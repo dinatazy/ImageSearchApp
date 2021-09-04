@@ -8,7 +8,7 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLOR.BACKGROUND,
+        backgroundColor: 'white',
         flex: 1,
     },
     headerText: {
@@ -45,5 +45,11 @@ export const styles = StyleSheet.create({
     image: {
         width: width * 0.45,
         height: height * 0.15
+    },
+    searchContainer:{
+        backgroundColor:"#ffffff"
+    },
+    inputContainer:{
+        backgroundColor:"#ffffff"
     }
 })
