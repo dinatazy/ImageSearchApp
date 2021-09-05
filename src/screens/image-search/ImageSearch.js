@@ -6,8 +6,6 @@ import { HistoryController } from '../../controller/history'
 import { SearchBar, Image, ListItem, Icon } from 'react-native-elements';
 import { COLOR } from '../../theme'
 
-
-
 const ImageSearch = () => {
 
     const [images, setImages] = useState([])
