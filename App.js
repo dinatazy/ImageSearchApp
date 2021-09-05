@@ -10,7 +10,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="ImageSearch">
-        <Stack.Screen name="ImageSearch" component={ImageSearch} options={{ title: 'Search Image' }} />
+        <Stack.Screen name="ImageSearch" component={ImageSearch} options={{ title: 'Home' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

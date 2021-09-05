@@ -8,14 +8,26 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: COLOR.BACKGROUND,
         flex: 1,
+    },
+    emptyScreen: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyScreenText:{
+        fontSize:20,
+        fontFamily:FONT.PRIMARY_SEMI_BOLD
     },
     headerText: {
         fontFamily: FONT.PRIMARY_SEMI_BOLD,
         fontSize: 40,
         marginBottom: 20,
         marginLeft: 20,
+    },
+    historyText:{
+        fontFamily:FONT.PRIMARY,
     },
     listContainer: {
         justifyContent: 'center',
@@ -46,10 +58,10 @@ export const styles = StyleSheet.create({
         width: width * 0.45,
         height: height * 0.15
     },
-    searchContainer:{
-        backgroundColor:"#ffffff"
+    searchContainer: {
+        backgroundColor: COLOR.BACKGROUND
     },
-    inputContainer:{
-        backgroundColor:"#ffffff"
+    inputContainer: {
+        backgroundColor: COLOR.BACKGROUND
     }
 })

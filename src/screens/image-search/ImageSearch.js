@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import { styles } from './Styles'
 import { ImagesController } from '../../controller/images'
 import { HistoryController } from '../../controller/history'
 import { SearchBar, Image, ListItem, Icon } from 'react-native-elements';
+import { COLOR } from '../../theme'
+
 
 
 const ImageSearch = () => {
@@ -40,9 +42,8 @@ const ImageSearch = () => {
     // load Search history texts
     const loadHistory = async () => {
         let historyTexts = await HistoryController.getSearchHistory();
-        if (historyTexts) {
-            setHistoryTexts(historyTexts)
-        }
+        setHistoryTexts(historyTexts)
+
     }
 
     // setting the next page number
@@ -81,7 +82,7 @@ const ImageSearch = () => {
     const renderFooter = () => {
         if (isLoadingMore) {
             return (
-                <ActivityIndicator style={styles.loadMore} size="small" color="black" />
+                <ActivityIndicator style={styles.loadMore} size="small" color={COLOR.SMALL_INDICATOR} />
             )
         }
     }
@@ -126,10 +127,10 @@ const ImageSearch = () => {
         if (historyTexts && historyTexts.length > 0) {
             return (
                 historyTexts.map((item, i) => (
-                    <ListItem containerStyle={{ backgroundColor: 'transparent' }} key={i} bottomDivider>
+                    <ListItem  key={i} bottomDivider>
                         <Icon name={"history"} />
                         <ListItem.Content>
-                            <ListItem.Title>{item.title}</ListItem.Title>
+                            <ListItem.Title style={styles.historyText}>{item.title}</ListItem.Title>
                         </ListItem.Content>
                     </ListItem>
                 ))
@@ -154,11 +155,22 @@ const ImageSearch = () => {
         }
     }
 
+    const renderEmptyScreen = () =>{
+        if(images.length == 0 && !isLoading){
+        return(
+            <View style={styles.emptyScreen}>
+                <Text style={styles.emptyScreenText}>Flicker Image Search </Text>
+            </View>
+        )
+        }
+    }
+
     return (
         <View style={styles.container}>
             {renderSearchBar()}
             {renderSearchHistory()}
             {renderImages()}
+            {renderEmptyScreen()}
             {renderLoading()}
         </View>
     )

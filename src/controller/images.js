@@ -9,13 +9,17 @@ class Images {
 
     // Gets the Images based on the written search text 
     getImages = async (searchText, page) => {
-        let data = await Api.getImages(searchText, page);
-        if (data && data.photos && data.photos.photo) {
-            this.total = data.photos.total;
-            let images = data.photos.photo;
-            let constructedUrlArray = this.constructImageUrl(images);
-            return constructedUrlArray;
-        } else {
+        try {
+            let data = await Api.getImages(searchText, page);
+            if (data && data.photos && data.photos.photo) {
+                this.total = data.photos.total;
+                let images = data.photos.photo;
+                let constructedUrlArray = this.constructImageUrl(images);
+                return constructedUrlArray;
+            } else {
+                return [];
+            }
+        } catch (err) {
             return [];
         }
     }
