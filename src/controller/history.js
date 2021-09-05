@@ -16,18 +16,22 @@ class History {
     updateSearchHistory = async (searchText) =>{
         if (searchText && searchText.length >= 3) {
             let historyTexts = await AsyncStorage.getItem('historyTexts')
+            
             if (historyTexts) {
                 historyTexts = JSON.parse(historyTexts)
             } else {
                 historyTexts = [];
             }
+
             if (historyTexts.length < 3) {
                 historyTexts.unshift({ title: searchText });
             } else {
                 historyTexts.pop();
                 historyTexts.unshift({ title: searchText });
             }
-            AsyncStorage.setItem('historyTexts', JSON.stringify(historyTexts));
+
+            await AsyncStorage.setItem('historyTexts', JSON.stringify(historyTexts));
+            return historyTexts;
         }
     }
 

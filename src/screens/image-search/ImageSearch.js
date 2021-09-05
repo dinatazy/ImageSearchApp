@@ -74,7 +74,8 @@ const ImageSearch = () => {
     }
 
     const updateSearchHistory = async () => {
-        await HistoryController.updateSearchHistory(searchText);
+        let historyTexts = await HistoryController.updateSearchHistory(searchText);
+        setHistoryTexts(historyTexts);
     }
 
     const renderFooter = () => {
