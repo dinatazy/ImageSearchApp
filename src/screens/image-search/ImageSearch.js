@@ -159,7 +159,7 @@ const ImageSearch = () => {
         if(images.length == 0 && !isLoading){
         return(
             <View style={styles.emptyScreen}>
-                <Text style={styles.emptyScreenText}>Flicker Image Search </Text>
+                <Text style={styles.emptyScreenText}>No search results</Text>
             </View>
         )
         }
